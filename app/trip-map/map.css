@@ -1,0 +1,9 @@
+.map-container-wrapper {
+  height: 500px;
+  width: 100%;
+}
+
+.MapContainer {
+  height: 100%;
+  width: 100%;
+}
