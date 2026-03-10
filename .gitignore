@@ -25,3 +25,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# bmad method
+/bmad/
+/.gemini/
+/.github/agents/
+/.github/chatmodes/
