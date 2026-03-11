@@ -4,3 +4,4 @@ npm install -g pnpm
 npx shadcn@latest add "https://v0.dev/chat/b/b_Z5CIfTjSaJk"
 npm i
 npm run dev
+npm install leaflet react-leaflet leaflet-routing-machine @types/leaflet --legacy-peer-deps
