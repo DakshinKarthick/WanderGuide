@@ -36,5 +36,12 @@ workflow_status:
   data-mapping: "docs/data-mapping.md"  # COMPLETED - CSV → DB → API → UI flow
   epics: "docs/epics.md"  # COMPLETED - 5 epics, 26 stories, 56 points
 
+  # Sprint 1 Progress
+  story-1-1: "COMPLETED — .env.local.example, auth callback route, Supabase clients, middleware verified"
+  story-1-2: "CODE EXISTS — supabase/migrations/001-006 (needs Supabase project to run)"
+  story-1-3: "CODE EXISTS — supabase/part1-part4 seed SQL (needs Supabase project to run)"
+  story-1-4: "COMPLETED — lib/types/* (destination, trip, user, chat, index)"
+  story-1-5: "COMPLETED — lib/supabase/client.ts, server.ts, middleware.ts + root middleware.ts"
+
   # Next Step
-  next: "Sprint 1 implementation (Stories 1.1 → 1.5, Foundation)"
+  next: "Create Supabase project, configure Google OAuth, add .env.local credentials, run migrations + seed"
