@@ -10,15 +10,28 @@ import { MultiStopPlanner } from "../components/MultiStopPlanner"
 import { DestinationModal } from "../components/DestinationModal"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
+import { useDestinations } from "@/lib/hooks/useDestinations"
+import type { Destination, Category, Region } from "@/lib/types/destination"
 
 export default function LocationsPage() {
   const router = useRouter()
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedDestination, setSelectedDestination] = useState(null)
-  const [tripStops, setTripStops] = useState([])
+  const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null)
+  const [tripStops, setTripStops] = useState<Destination[]>([])
   const [activeTab, setActiveTab] = useState("explore")
+  const [filters, setFilters] = useState<{
+    search: string
+    region: Region | "all"
+    category: Category | "all"
+  }>({
+    search: "",
+    region: "all",
+    category: "all",
+  })
 
-  const addToTrip = (destination) => {
+  const { destinations, isLoading, isLoadingMore, hasMore, loadMore } = useDestinations(filters)
+
+  const addToTrip = (destination: Destination) => {
     // Check if destination is already in the trip
     if (!tripStops.some((stop) => stop.id === destination.id)) {
       setTripStops([...tripStops, destination])
@@ -39,7 +52,11 @@ export default function LocationsPage() {
     <div className="bg-gradient-to-br from-[#6A87E0] to-white dark:from-[#5A77D0] dark:to-gray-700 text-foreground p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-bold text-white dark:text-white mb-6">Explore Incredible India</h1>
-        <SearchBar className="mb-8" />
+        <SearchBar
+          className="mb-8"
+          value={filters.search}
+          onSearchChange={(search) => setFilters((prev) => ({ ...prev, search }))}
+        />
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
           <TabsList className="grid w-full grid-cols-2 bg-[#6A87E0] dark:bg-[#5A77D0]">
             <TabsTrigger
@@ -56,8 +73,16 @@ export default function LocationsPage() {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="explore" className="space-y-8">
-            <Filters />
+            <Filters
+              value={{ region: filters.region, category: filters.category }}
+              onChange={(next) => setFilters((prev) => ({ ...prev, ...next }))}
+            />
             <DestinationGrid
+              destinations={destinations}
+              isLoading={isLoading}
+              isLoadingMore={isLoadingMore}
+              hasMore={hasMore}
+              onLoadMore={loadMore}
               onDestinationClick={(destination) => {
                 setSelectedDestination(destination)
                 setIsModalOpen(true)

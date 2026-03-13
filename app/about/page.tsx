@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button"
 export default function AboutPage() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center text-[#87A2FF]">About TravelIndia</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center text-[#4A67C0]">About WanderGuide</h1>
 
       <div className="grid md:grid-cols-2 gap-8 mb-12">
         <div>
           <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
           <p className="mb-4">
-            At TravelIndia, our mission is to showcase the incredible diversity and beauty of India to travelers from
+            At WanderGuide, our mission is to showcase the incredible diversity and beauty of India to travelers from
             around the world. We believe in creating immersive, authentic experiences that connect visitors with the
             heart and soul of this magnificent country.
           </p>
@@ -31,29 +31,29 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <h2 className="text-2xl font-semibold mb-6 text-center">Why Choose TravelIndia?</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-center">Why Choose WanderGuide?</h2>
       <div className="grid md:grid-cols-3 gap-6 mb-12">
-        <Card className="border-[#C4D7FF]">
+        <Card className="border-[#6A87E0]">
           <CardHeader>
-            <CardTitle className="text-[#87A2FF]">Expert Local Guides</CardTitle>
+            <CardTitle className="text-[#4A67C0]">Expert Local Guides</CardTitle>
           </CardHeader>
           <CardContent>
             Our team of experienced local guides ensures you get an authentic and insightful experience of India's
             culture and heritage.
           </CardContent>
         </Card>
-        <Card className="border-[#C4D7FF]">
+        <Card className="border-[#6A87E0]">
           <CardHeader>
-            <CardTitle className="text-[#87A2FF]">Customized Itineraries</CardTitle>
+            <CardTitle className="text-[#4A67C0]">Customized Itineraries</CardTitle>
           </CardHeader>
           <CardContent>
             We tailor each journey to your preferences, ensuring a unique and personalized travel experience for every
             visitor.
           </CardContent>
         </Card>
-        <Card className="border-[#C4D7FF]">
+        <Card className="border-[#6A87E0]">
           <CardHeader>
-            <CardTitle className="text-[#87A2FF]">Responsible Tourism</CardTitle>
+            <CardTitle className="text-[#4A67C0]">Responsible Tourism</CardTitle>
           </CardHeader>
           <CardContent>
             We're committed to sustainable travel practices that benefit local communities and preserve India's natural
@@ -70,7 +70,7 @@ export default function AboutPage() {
           { name: "Anita Desai", role: "Lead Travel Curator" },
           { name: "Vikram Singh", role: "Customer Experience Manager" },
         ].map((member, index) => (
-          <Card key={index} className="border-[#C4D7FF]">
+          <Card key={index} className="border-[#6A87E0]">
             <CardHeader>
               <div className="w-24 h-24 mx-auto mb-4 relative">
                 <Image
@@ -80,7 +80,7 @@ export default function AboutPage() {
                   className="rounded-full"
                 />
               </div>
-              <CardTitle className="text-center text-[#87A2FF]">{member.name}</CardTitle>
+              <CardTitle className="text-center text-[#4A67C0]">{member.name}</CardTitle>
             </CardHeader>
             <CardContent className="text-center">{member.role}</CardContent>
           </Card>
@@ -89,7 +89,7 @@ export default function AboutPage() {
 
       <div className="text-center">
         <h2 className="text-2xl font-semibold mb-4">Ready to Explore India?</h2>
-        <Button className="bg-[#87A2FF] hover:bg-[#FFD7C4] text-white hover:text-gray-800">
+        <Button className="bg-[#4A67C0] hover:bg-[#6A87E0] text-white">
           Start Planning Your Trip
         </Button>
       </div>

@@ -7,12 +7,12 @@ import { Mail, Phone, MapPin } from "lucide-react"
 export default function ContactPage() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center text-[#87A2FF]">Contact Us</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center text-[#4A67C0]">Contact WanderGuide</h1>
 
       <div className="grid md:grid-cols-2 gap-8">
-        <Card className="border-[#C4D7FF]">
+        <Card className="border-[#6A87E0]">
           <CardHeader>
-            <CardTitle className="text-2xl font-semibold text-[#87A2FF]">Get in Touch</CardTitle>
+            <CardTitle className="text-2xl font-semibold text-[#4A67C0]">Get in Touch</CardTitle>
           </CardHeader>
           <CardContent>
             <form className="space-y-4">
@@ -34,28 +34,28 @@ export default function ContactPage() {
                 </label>
                 <Textarea id="message" placeholder="Your message here..." className="mt-1" />
               </div>
-              <Button className="w-full bg-[#87A2FF] hover:bg-[#FFD7C4] text-white hover:text-gray-800">
+              <Button className="w-full bg-[#4A67C0] hover:bg-[#6A87E0] text-white">
                 Send Message
               </Button>
             </form>
           </CardContent>
         </Card>
 
-        <Card className="border-[#C4D7FF]">
+        <Card className="border-[#6A87E0]">
           <CardHeader>
-            <CardTitle className="text-2xl font-semibold text-[#87A2FF]">Contact Information</CardTitle>
+            <CardTitle className="text-2xl font-semibold text-[#4A67C0]">Contact Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center space-x-2">
-              <Mail className="text-[#87A2FF]" />
-              <span>info@travelindia.com</span>
+              <Mail className="text-[#4A67C0]" />
+              <span>info@wanderguide.com</span>
             </div>
             <div className="flex items-center space-x-2">
-              <Phone className="text-[#87A2FF]" />
+              <Phone className="text-[#4A67C0]" />
               <span>+91 123 456 7890</span>
             </div>
             <div className="flex items-center space-x-2">
-              <MapPin className="text-[#87A2FF]" />
+              <MapPin className="text-[#4A67C0]" />
               <span>123 Travel Street, New Delhi, India 110001</span>
             </div>
             <div className="mt-6">

@@ -1,12 +1,28 @@
 "use client"
 
-import { useState } from "react"
+import { CATEGORIES, CATEGORY_LABELS, REGIONS, REGION_LABELS } from "@/lib/constants"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import type { Category, Region } from "@/lib/types/destination"
 
-export function Filters() {
-  const [region, setRegion] = useState("all")
-  const [locationType, setLocationType] = useState("any")
+interface FiltersValue {
+  region: Region | "all"
+  category: Category | "all"
+}
+
+interface FiltersProps {
+  value: FiltersValue
+  onChange: (value: FiltersValue) => void
+}
+
+export function Filters({ value, onChange }: FiltersProps) {
+  const handleRegionChange = (region: string) => {
+    onChange({ ...value, region: region as Region | "all" })
+  }
+
+  const handleCategoryChange = (category: string) => {
+    onChange({ ...value, category: category as Category | "all" })
+  }
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-6 border border-[#6A87E0] dark:border-[#5A77D0]">
@@ -16,7 +32,7 @@ export function Filters() {
           <Label htmlFor="region" className="text-gray-800 dark:text-white">
             Places in India
           </Label>
-          <Select value={region} onValueChange={setRegion}>
+          <Select value={value.region} onValueChange={handleRegionChange}>
             <SelectTrigger
               id="region"
               className="border-[#6A87E0] dark:border-[#5A77D0] text-white dark:text-white bg-[#4A67C0] dark:bg-[#3A57B0]"
@@ -27,24 +43,11 @@ export function Filters() {
               <SelectItem value="all" className="text-gray-800 dark:text-white">
                 All India
               </SelectItem>
-              <SelectItem value="north" className="text-gray-800 dark:text-white">
-                North India
-              </SelectItem>
-              <SelectItem value="south" className="text-gray-800 dark:text-white">
-                South India
-              </SelectItem>
-              <SelectItem value="east" className="text-gray-800 dark:text-white">
-                East India
-              </SelectItem>
-              <SelectItem value="west" className="text-gray-800 dark:text-white">
-                West India
-              </SelectItem>
-              <SelectItem value="central" className="text-gray-800 dark:text-white">
-                Central India
-              </SelectItem>
-              <SelectItem value="northeast" className="text-gray-800 dark:text-white">
-                Northeast India
-              </SelectItem>
+              {REGIONS.map((region) => (
+                <SelectItem key={region} value={region} className="text-gray-800 dark:text-white">
+                  {REGION_LABELS[region]}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -52,7 +55,7 @@ export function Filters() {
           <Label htmlFor="location-type" className="text-gray-800 dark:text-white">
             Type of Location
           </Label>
-          <Select value={locationType} onValueChange={setLocationType}>
+          <Select value={value.category} onValueChange={handleCategoryChange}>
             <SelectTrigger
               id="location-type"
               className="border-[#6A87E0] dark:border-[#5A77D0] text-white dark:text-white bg-[#4A67C0] dark:bg-[#3A57B0]"
@@ -60,27 +63,14 @@ export function Filters() {
               <SelectValue placeholder="Select location type" />
             </SelectTrigger>
             <SelectContent className="bg-white dark:bg-gray-800">
-              <SelectItem value="any" className="text-gray-800 dark:text-white">
-                Any
+              <SelectItem value="all" className="text-gray-800 dark:text-white">
+                All Categories
               </SelectItem>
-              <SelectItem value="restaurant" className="text-gray-800 dark:text-white">
-                Restaurant
-              </SelectItem>
-              <SelectItem value="bar" className="text-gray-800 dark:text-white">
-                Bar
-              </SelectItem>
-              <SelectItem value="theatre" className="text-gray-800 dark:text-white">
-                Theatre
-              </SelectItem>
-              <SelectItem value="museum" className="text-gray-800 dark:text-white">
-                Museum
-              </SelectItem>
-              <SelectItem value="temple" className="text-gray-800 dark:text-white">
-                Temple
-              </SelectItem>
-              <SelectItem value="park" className="text-gray-800 dark:text-white">
-                Park
-              </SelectItem>
+              {CATEGORIES.map((category) => (
+                <SelectItem key={category} value={category} className="text-gray-800 dark:text-white">
+                  {CATEGORY_LABELS[category]}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

@@ -4,8 +4,15 @@ import Image from "next/image"
 import { Star, Calendar, DollarSign, PlusCircle } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import type { Destination } from "@/lib/types/destination"
 
-export function DestinationModal({ destination, onClose, onAddToTrip }) {
+interface DestinationModalProps {
+  destination: Destination | null
+  onClose: () => void
+  onAddToTrip: (destination: Destination) => void
+}
+
+export function DestinationModal({ destination, onClose, onAddToTrip }: DestinationModalProps) {
   if (!destination) return null
 
   return (
@@ -16,7 +23,7 @@ export function DestinationModal({ destination, onClose, onAddToTrip }) {
         </DialogHeader>
         <div className="relative aspect-video mb-4">
           <Image
-            src={destination.image || "/placeholder.svg"}
+            src={destination.image_url || "/placeholder.svg"}
             alt={destination.name}
             layout="fill"
             objectFit="cover"
@@ -34,20 +41,18 @@ export function DestinationModal({ destination, onClose, onAddToTrip }) {
           </p>
           <h3 className="font-semibold text-[#4A67C0] dark:text-[#6A87E0]">Highlights</h3>
           <ul className="list-disc list-inside space-y-1">
-            {(destination.highlights || ["Local cuisine", "Historical sites", "Cultural experiences"]).map(
-              (highlight, index) => (
-                <li key={index}>{highlight}</li>
-              ),
-            )}
+            {(destination.tags.length > 0 ? destination.tags : ["Local cuisine", "Historical sites", "Cultural experiences"]).map((highlight, index) => (
+              <li key={index}>{highlight}</li>
+            ))}
           </ul>
           <div className="flex justify-between text-sm">
             <div className="flex items-center">
               <Calendar className="w-4 h-4 mr-2 text-[#4A67C0] dark:text-[#6A87E0]" />
-              <span>{destination.bestTimeToVisit || "October to March"}</span>
+              <span>{destination.best_time_to_visit || "October to March"}</span>
             </div>
             <div className="flex items-center">
               <DollarSign className="w-4 h-4 mr-2 text-[#4A67C0] dark:text-[#6A87E0]" />
-              <span>{destination.averageCost || "₹2000 per day"}</span>
+              <span>{destination.entrance_fee ? `₹${destination.entrance_fee}` : "Free/Varies"}</span>
             </div>
           </div>
         </div>

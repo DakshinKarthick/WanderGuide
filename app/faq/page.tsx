@@ -37,11 +37,11 @@ const faqs = [
 export default function FAQPage() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center text-[#87A2FF]">Frequently Asked Questions</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center text-[#4A67C0]">Frequently Asked Questions</h1>
 
-      <Card className="border-[#C4D7FF]">
+      <Card className="border-[#6A87E0]">
         <CardHeader>
-          <CardTitle className="text-2xl font-semibold text-[#87A2FF]">
+          <CardTitle className="text-2xl font-semibold text-[#4A67C0]">
             Common Questions About Traveling in India
           </CardTitle>
         </CardHeader>
@@ -57,9 +57,9 @@ export default function FAQPage() {
         </CardContent>
       </Card>
 
-      <Card className="mt-8 border-[#C4D7FF]">
+      <Card className="mt-8 border-[#6A87E0]">
         <CardHeader>
-          <CardTitle className="text-2xl font-semibold text-[#87A2FF]">Still Have Questions?</CardTitle>
+          <CardTitle className="text-2xl font-semibold text-[#4A67C0]">Still Have Questions?</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="mb-4">
@@ -69,7 +69,7 @@ export default function FAQPage() {
           </p>
           <p className="mb-4">
             You can contact us through our{" "}
-            <a href="/contact" className="text-[#87A2FF] hover:underline">
+            <a href="/contact" className="text-[#4A67C0] hover:underline">
               contact page
             </a>
             , or call us directly at +91 123 456 7890.
