@@ -2,6 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { withPlaceImage } from '@/lib/place-image';
 
+function deduplicateByName<T extends { name: string }>(items: T[]): T[] {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    const key = item.name.trim().toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 const DEFAULT_DESTINATION_LIMIT = 5;
 const DEFAULT_EVENT_LIMIT = 5;
 
@@ -28,7 +38,7 @@ export async function GET(request: NextRequest) {
       .select('*')
       .order('trending_score', { ascending: false, nullsFirst: false })
       .order('rating', { ascending: false, nullsFirst: false })
-      .limit(destinationsLimit),
+      .limit(destinationsLimit * 3),
     supabase
       .from('events')
       .select('*')
@@ -45,8 +55,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: eventsResult.error.message }, { status: 500 });
   }
 
+  const uniqueDestinations = deduplicateByName(destinationsResult.data ?? []).slice(0, destinationsLimit);
+
   return NextResponse.json({
-    trendingDestinations: (destinationsResult.data ?? []).map((destination) => withPlaceImage(destination)),
+    trendingDestinations: uniqueDestinations.map((destination) => withPlaceImage(destination)),
     upcomingEvents: (eventsResult.data ?? []).map((event) => withPlaceImage(event)),
   });
 }

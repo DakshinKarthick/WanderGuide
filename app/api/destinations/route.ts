@@ -5,6 +5,16 @@ import { withPlaceImage } from '@/lib/place-image';
 const DEFAULT_LIMIT = 12;
 const MAX_LIMIT = 50;
 
+function deduplicateByName<T extends { name: string }>(items: T[]): T[] {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    const key = item.name.trim().toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 const ALLOWED_SORT_COLUMNS = new Set([
   'name',
   'rating',
@@ -46,8 +56,10 @@ export async function GET(request: NextRequest) {
     query = query.eq('category', category);
   }
 
+  // Fetch a larger batch so deduplication still fills the requested page size.
+  const fetchMultiplier = 3;
   const from = (page - 1) * limit;
-  const to = from + limit - 1;
+  const to = from + limit * fetchMultiplier - 1;
 
   const { data, error, count } = await query
     .order(sortColumn, { ascending, nullsFirst: false })
@@ -57,10 +69,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  const unique = deduplicateByName(data ?? []).slice(0, limit);
   const total = count ?? 0;
 
   return NextResponse.json({
-    destinations: (data ?? []).map((destination) => withPlaceImage(destination)),
+    destinations: unique.map((destination) => withPlaceImage(destination)),
     pagination: {
       page,
       limit,
