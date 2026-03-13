@@ -4,7 +4,11 @@ import { PLACEHOLDER_IMAGE } from '@/lib/place-image';
 const SEARCH_ENDPOINT = 'https://en.wikipedia.org/w/api.php';
 const COMMONS_SEARCH_ENDPOINT = 'https://commons.wikimedia.org/w/api.php';
 const SUMMARY_ENDPOINT = 'https://en.wikipedia.org/api/rest_v1/page/summary';
+const PEXELS_SEARCH_ENDPOINT = 'https://api.pexels.com/v1/search';
+const UNSPLASH_SEARCH_ENDPOINT = 'https://api.unsplash.com/search/photos';
 const USER_AGENT = 'WanderGuide/1.0 (destination image resolver)';
+const PEXELS_API_KEY = process.env.PEXELS_API_KEY?.trim();
+const UNSPLASH_ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY?.trim();
 
 interface CommonsSearchResponse {
   query?: {
@@ -16,6 +20,25 @@ interface CommonsSearchResponse {
       }>;
     }>;
   };
+}
+
+interface PexelsSearchResponse {
+  photos?: Array<{
+    src?: {
+      large?: string;
+      landscape?: string;
+      original?: string;
+    };
+  }>;
+}
+
+interface UnsplashSearchResponse {
+  results?: Array<{
+    urls?: {
+      regular?: string;
+      full?: string;
+    };
+  }>;
 }
 
 async function searchWikipediaTitle(query: string) {
@@ -87,6 +110,60 @@ async function searchCommonsImage(query: string) {
   return image?.thumburl ?? image?.url ?? null;
 }
 
+async function searchPexelsImage(query: string) {
+  if (!PEXELS_API_KEY) {
+    return null;
+  }
+
+  const url = new URL(PEXELS_SEARCH_ENDPOINT);
+  url.searchParams.set('query', query);
+  url.searchParams.set('per_page', '1');
+  url.searchParams.set('orientation', 'landscape');
+
+  const response = await fetch(url.toString(), {
+    headers: {
+      Authorization: PEXELS_API_KEY,
+      'User-Agent': USER_AGENT,
+    },
+    next: { revalidate: 60 * 60 * 24 * 7 },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const payload = (await response.json()) as PexelsSearchResponse;
+  const image = payload.photos?.[0]?.src;
+  return image?.large ?? image?.landscape ?? image?.original ?? null;
+}
+
+async function searchUnsplashImage(query: string) {
+  if (!UNSPLASH_ACCESS_KEY) {
+    return null;
+  }
+
+  const url = new URL(UNSPLASH_SEARCH_ENDPOINT);
+  url.searchParams.set('query', query);
+  url.searchParams.set('per_page', '1');
+  url.searchParams.set('orientation', 'landscape');
+
+  const response = await fetch(url.toString(), {
+    headers: {
+      Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}`,
+      'User-Agent': USER_AGENT,
+    },
+    next: { revalidate: 60 * 60 * 24 * 7 },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const payload = (await response.json()) as UnsplashSearchResponse;
+  const image = payload.results?.[0]?.urls;
+  return image?.regular ?? image?.full ?? null;
+}
+
 async function resolvePlaceImageUrl(name: string, city?: string | null, state?: string | null) {
   const candidates = [
     [name, city, state, 'India'].filter(Boolean).join(' '),
@@ -96,6 +173,18 @@ async function resolvePlaceImageUrl(name: string, city?: string | null, state?: 
   ].filter(Boolean);
 
   for (const query of candidates) {
+    const pexelsImage = await searchPexelsImage(query);
+
+    if (pexelsImage) {
+      return pexelsImage;
+    }
+
+    const unsplashImage = await searchUnsplashImage(query);
+
+    if (unsplashImage) {
+      return unsplashImage;
+    }
+
     const commonsImage = await searchCommonsImage(query);
 
     if (commonsImage) {
