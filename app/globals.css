@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    /* WanderGuide Design Tokens — Light */
+    --background: 210 20% 98%;
+    --foreground: 220 25% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 12%;
+
+    --primary: 230 75% 55%;          /* Indigo-blue */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 30% 94%;
+    --secondary-foreground: 220 25% 25%;
+
+    --muted: 210 25% 93%;
+    --muted-foreground: 215 15% 52%;
+
+    --accent: 25 90% 60%;            /* Warm amber accent */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 25% 88%;
+    --input: 214 25% 92%;
+    --ring: 230 75% 55%;
+
+    --radius: 0.75rem;
+
+    /* Extended palette */
+    --brand-50: 230 100% 97%;
+    --brand-100: 230 95% 93%;
+    --brand-500: 230 75% 55%;
+    --brand-600: 230 70% 48%;
+    --brand-700: 230 65% 40%;
+
+    --amber-400: 38 95% 58%;
+    --amber-500: 32 90% 50%;
+
+    --surface-raised: 0 0% 100%;
+    --surface-sunken: 210 22% 96%;
+  }
+
+  .dark {
+    --background: 222 30% 8%;
+    --foreground: 210 30% 94%;
+
+    --card: 222 28% 11%;
+    --card-foreground: 210 30% 94%;
+
+    --popover: 222 28% 10%;
+    --popover-foreground: 210 30% 94%;
+
+    --primary: 230 80% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 222 25% 18%;
+    --secondary-foreground: 210 30% 88%;
+
+    --muted: 222 22% 16%;
+    --muted-foreground: 215 18% 58%;
+
+    --accent: 25 90% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 42%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 222 22% 20%;
+    --input: 222 22% 18%;
+    --ring: 230 80% 65%;
+
+    --brand-50: 230 30% 15%;
+    --brand-100: 230 35% 20%;
+    --brand-500: 230 80% 65%;
+    --brand-600: 230 75% 58%;
+    --brand-700: 230 70% 50%;
+
+    --surface-raised: 222 28% 13%;
+    --surface-sunken: 222 30% 7%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+
+  html { font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11'; }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+  /* Brand gradient */
+  .bg-brand-gradient {
+    background: linear-gradient(135deg, hsl(230, 75%, 55%) 0%, hsl(250, 70%, 60%) 100%);
+  }
+
+  /* Glassmorphism card */
+  .glass {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .dark .glass {
+    background: rgba(15, 20, 40, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Card hover lift */
+  .card-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -12px rgba(90, 110, 220, 0.2);
+  }
+
+  /* Smooth focus ring */
+  .focus-brand {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+
+  /* Text gradient */
+  .text-brand-gradient {
+    background: linear-gradient(135deg, hsl(230, 75%, 55%), hsl(250, 70%, 65%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Scrollbar thin */
+  .scrollbar-thin::-webkit-scrollbar { width: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-border;
+  }
+
+  /* Section divider */
+  .section-divider {
+    @apply border-t border-border/60;
+  }
+
+  /* Skeleton shimmer */
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .skeleton-shimmer {
+    background: linear-gradient(90deg, hsl(var(--muted)) 25%, hsl(var(--secondary)) 50%, hsl(var(--muted)) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Fade-in animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+}
