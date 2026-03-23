@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import dynamic from "next/dynamic"
 import { 
   CalendarIcon, 
   ArrowLeft, 
@@ -29,6 +30,11 @@ import { useTrips } from "@/lib/hooks/useTrips"
 import type { Destination } from "@/lib/types/destination"
 import type { CreateTripStopInput, TripActivity, TripStop } from "@/lib/types/trip"
 import { ActivityPlanner } from "./ActivityPlanner"
+
+const TripMapClient = dynamic(() => import("../trip-map/TripMapClient"), {
+  ssr: false,
+  loading: () => <div className="h-[600px] w-full bg-[#1E293B] rounded-2xl flex items-center justify-center border border-slate-800 text-slate-400">Loading interactive map and travel summary...</div>
+})
 
 export default function TripPlanningPage() {
   return (
@@ -323,6 +329,36 @@ function TripPlanningContent() {
             <h1 className="text-4xl font-bold text-[#6366F1]">Plan Your Trip</h1>
           </div>
         </header>
+
+        {/* Map Integration Section */}
+        <section className="mb-8 bg-[#1E293B] rounded-2xl overflow-hidden border border-slate-800 h-[600px]">
+          {tripStops.length > 0 ? (
+            <TripMapClient
+              embedded={true}
+              waypoints={tripStops.map((stop) => ({
+                id: stop.id,
+                lat: stop.latitude,
+                lng: stop.longitude,
+                name: stop.name,
+              }))}
+              onWaypointsChange={(newWaypoints) => {
+                const newStops = newWaypoints
+                  .map(wp => tripStops.find(t => t.id === wp.id))
+                  .filter(Boolean) as Destination[];
+                setTripStops(newStops);
+                if (!activeTrip) {
+                  localStorage.setItem("tripStops", JSON.stringify(newStops));
+                }
+              }}
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full text-slate-400 p-8 text-center">
+              <MapPin className="h-16 w-16 mb-4 text-slate-500 opacity-50" />
+              <h3 className="text-xl font-bold text-slate-300 mb-2">No Destinations Selected</h3>
+              <p>Add destinations to your trip to see them on the map, visualize your route, and calculate travel times between stops.</p>
+            </div>
+          )}
+        </section>
 
         {tripError && (
           <Alert variant="destructive" className="mb-6 bg-red-500/10 border-red-500/50 text-red-200">

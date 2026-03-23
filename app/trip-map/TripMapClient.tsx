@@ -17,6 +17,7 @@ const DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 type Waypoint = {
+  id?: string;
   lat: number;
   lng: number;
   name: string;
@@ -24,6 +25,8 @@ type Waypoint = {
 
 interface TripMapClientProps {
   waypoints: Waypoint[];
+  embedded?: boolean;
+  onWaypointsChange?: (newWaypoints: Waypoint[]) => void;
 }
 
 type TripLocation = {
@@ -113,14 +116,24 @@ function formatDistance(meters: number): string {
 
 const routeColors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
 
-const TripMapClient = ({ waypoints }: TripMapClientProps) => {
-    const initialLocationsFromProps: TripLocation[] = (waypoints || []).map((wp, index) => ({
-      id: `${wp.name}-${index}`, // Use name and index for a unique id
+const TripMapClient = ({ waypoints, embedded, onWaypointsChange }: TripMapClientProps) => {
+    const initialLocationsFromProps = (): TripLocation[] => (waypoints || []).map((wp, index) => ({
+      id: wp.id || `${wp.name}-${index}`, // Use name and index for a unique id if id is not provided
       name: wp.name,
       position: { lat: wp.lat, lng: wp.lng },
     }));
 
-    const [locations, setLocations] = useState<TripLocation[]>(initialLocationsFromProps);
+    const [locations, setLocations] = useState<TripLocation[]>(initialLocationsFromProps());
+
+    // Keep it synced if parent updates the waypoints completely (e.g. from the locations page or hydration)
+    useEffect(() => {
+         const newLocs = initialLocationsFromProps();
+         const currentIds = locations.map(l => l.id).join(',');
+         const newIds = newLocs.map(l => l.id).join(',');
+         if (currentIds !== newIds) {
+              setLocations(newLocs);
+         }
+    }, [waypoints]);
     const [matrix, setMatrix] = useState<MatrixData | null>(null);
     const [routeSegments, setRouteSegments] = useState<RouteGeometry[]>([]);
     const [loading, setLoading] = useState(false);
@@ -170,14 +183,21 @@ const TripMapClient = ({ waypoints }: TripMapClientProps) => {
         const [reordered] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reordered);
         setLocations(items);
+        if (onWaypointsChange) {
+            onWaypointsChange(items.map(i => ({ id: i.id, lat: i.position.lat, lng: i.position.lng, name: i.name })));
+        }
     };
 
     const removeLocation = (id: string) => {
-        setLocations(prev => prev.filter(loc => loc.id !== id));
+        const newLocs = locations.filter(loc => loc.id !== id);
+        setLocations(newLocs);
+        if (onWaypointsChange) {
+            onWaypointsChange(newLocs.map(i => ({ id: i.id, lat: i.position.lat, lng: i.position.lng, name: i.name })));
+        }
     };
 
     return (
-        <div className="trip-map-page">
+        <div className={`trip-map-page ${embedded ? 'embedded' : ''}`}>
             {/* Left Sidebar */}
             <aside className="trip-sidebar">
                 <div className="sidebar-header">

@@ -5,6 +5,11 @@
     overflow: hidden;
 }
 
+.trip-map-page.embedded {
+    height: 100%;
+    min-height: 400px;
+}
+
 /* ── Left sidebar ── */
 .trip-sidebar {
     width: 380px;
