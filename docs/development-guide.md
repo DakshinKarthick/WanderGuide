@@ -52,7 +52,7 @@ Create `app/{route}/page.tsx`. For client-side interactivity, add `"use client"`
 
 ### Adding a shadcn/ui Component
 ```bash
-npx shadcn@latest add <component-name>
+pnpm dlx shadcn@latest add <component-name>
 ```
 Components are installed to `components/ui/`.
 

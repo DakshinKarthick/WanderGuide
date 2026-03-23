@@ -4,7 +4,7 @@
  * Reads 3 CSV datasets and produces a single `supabase/seed.sql` file
  * that can be pasted into the Supabase SQL Editor.
  *
- * Usage:  npx tsx scripts/seed.ts
+ * Usage:  pnpm dlx tsx scripts/seed.ts
  * Output: supabase/seed.sql
  *
  * Pipeline:

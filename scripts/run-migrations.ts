@@ -1,6 +1,6 @@
 /**
  * Run all migrations + seed against Supabase PostgreSQL
- * Usage: npx tsx scripts/run-migrations.ts
+ * Usage: pnpm dlx tsx scripts/run-migrations.ts
  */
 import pg from 'pg';
 import { readFileSync, readdirSync } from 'fs';
@@ -33,7 +33,7 @@ const DATABASE_URL =
 async function run() {
   if (!DATABASE_URL) {
     console.error('❌ Missing DATABASE_URL (or SUPABASE_DB_URL).');
-    console.error('   Add it to .env and rerun: npx tsx scripts/run-migrations.ts');
+    console.error('   Add it to .env and rerun: pnpm dlx tsx scripts/run-migrations.ts');
     process.exit(1);
   }
 

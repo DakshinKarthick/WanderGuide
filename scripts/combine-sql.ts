@@ -1,7 +1,7 @@
 /**
  * Combine all migrations + seed into a single SQL file
  * for pasting into the Supabase SQL Editor.
- * Usage: npx tsx scripts/combine-sql.ts
+ * Usage: pnpm dlx tsx scripts/combine-sql.ts
  */
 import { readFileSync, writeFileSync, readdirSync } from 'fs';
 import { join } from 'path';

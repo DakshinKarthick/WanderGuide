@@ -2,12 +2,13 @@
   "name": "my-v0-project",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "npx jest"
+    "test": "jest"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",

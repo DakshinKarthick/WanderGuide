@@ -1,10 +1,8 @@
 # To run follow these steps
-npm install --legacy-peer-deps
-npm install -g pnpm
-npx shadcn@latest add "https://v0.dev/chat/b/b_Z5CIfTjSaJk"
-npm i
-npm run dev
-npm install leaflet react-leaflet leaflet-routing-machine @types/leaflet --legacy-peer-deps
+pnpm install
+pnpm dlx shadcn@latest add "https://v0.dev/chat/b/b_Z5CIfTjSaJk"
+pnpm dev
+pnpm add leaflet react-leaflet leaflet-routing-machine @types/leaflet
 
 ## Destination images
 The app resolves destination and event images in this order:
