@@ -36,13 +36,12 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Install pnpm to run Next.js in the runner image
-RUN npm install -g pnpm
+# Use the Next standalone build output (produces server.js) so runtime
+# doesn't need the `next` binary. This matches Next's `output: 'standalone'`.
 
-# Copy build output and dependencies from builder
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+# Copy the standalone server produced by the builder
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 
 # Expose and honor the PORT env (Railway and other PaaS inject PORT)
@@ -51,5 +50,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Run next in production, binding to the injected PORT and 0.0.0.0
-CMD ["sh", "-c", "next start -p ${PORT} -H 0.0.0.0"]
+# Start the standalone server (server.js) binding to the injected PORT
+CMD ["node", "server.js"]
