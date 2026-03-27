@@ -27,6 +27,7 @@ export async function GET() {
     .order("updated_at", { ascending: false });
 
   if (error) {
+    console.error("Supabase Trips Query Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
@@ -87,6 +88,16 @@ export async function POST(request: NextRequest) {
   if (fetchError) {
     return NextResponse.json({ error: fetchError.message }, { status: 500 });
   }
+
+  // Create a notification for the new trip
+  const stopCount = (tripWithStops as Trip)?.trip_stops?.length ?? 0;
+  await supabase.from("notifications").insert({
+    user_id: user.id,
+    type: "trip_update" as const,
+    title: `Trip "${name}" created!`,
+    body: `Your trip with ${stopCount} destination${stopCount !== 1 ? "s" : ""} has been saved. Head to Trip Planning to set dates and activities.`,
+    link: `/trip-planning?trip=${createdTrip.id}`,
+  }).then(() => {}, () => {}); // non-critical, ignore errors
 
   return NextResponse.json({ trip: normalizeTrip(tripWithStops as Trip) }, { status: 201 });
 }

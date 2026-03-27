@@ -22,7 +22,15 @@ export async function findNearbyPlaces(
 
   try {
     const response = await fetch(url);
+    if (!response.ok) {
+        console.error('Geoapify HTTP Error:', response.status);
+        return [];
+    }
     const data = await response.json();
+    if (!data || !Array.isArray(data.features)) {
+        console.error('Geoapify returned an unexpected response:', data);
+        return [];
+    }
     return data.features.map((feature: any) => ({
       id: feature.properties.place_id,
       name: feature.properties.name,

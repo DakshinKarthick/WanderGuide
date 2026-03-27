@@ -13,6 +13,38 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
+      // Create a welcome notification for first-time users
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { count } = await supabase
+            .from('notifications')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', user.id);
+
+          if (count === 0) {
+            await supabase.from('notifications').insert([
+              {
+                user_id: user.id,
+                type: 'system',
+                title: 'Welcome to WanderGuide! 🎉',
+                body: 'Start exploring destinations, plan your dream trip across India, and share your travel experiences.',
+                link: '/locations',
+              },
+              {
+                user_id: user.id,
+                type: 'new_feature',
+                title: 'Plan Multi-Stop Trips',
+                body: 'Use our Trip Planner to add multiple destinations, set dates, and get budget estimates for your journey.',
+                link: '/locations?tab=planner',
+              },
+            ]);
+          }
+        }
+      } catch {
+        // Non-critical — don't block the redirect if notification insertion fails
+      }
+
       return NextResponse.redirect(`${origin}${next}`);
     }
   }

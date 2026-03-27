@@ -79,6 +79,7 @@ export async function PUT(request: NextRequest, context: RouteParams) {
       .eq("id", authorized.tripId);
 
     if (updateTripError) {
+      console.error("PUT /api/trips/[id] — update trip fields error:", updateTripError);
       return NextResponse.json({ error: updateTripError.message }, { status: 500 });
     }
   }
@@ -90,6 +91,7 @@ export async function PUT(request: NextRequest, context: RouteParams) {
       .eq("trip_id", authorized.tripId);
 
     if (deleteError) {
+      console.error("PUT /api/trips/[id] — delete old stops error:", deleteError);
       return NextResponse.json({ error: deleteError.message }, { status: 500 });
     }
 
@@ -101,9 +103,11 @@ export async function PUT(request: NextRequest, context: RouteParams) {
         days_allocated: Math.max(1, Number(stop.days_allocated) || 1),
       }));
 
+      console.log("PUT /api/trips/[id] — inserting stops:", JSON.stringify(stopsToInsert));
       const { error: insertStopsError } = await supabase.from("trip_stops").insert(stopsToInsert);
 
       if (insertStopsError) {
+        console.error("PUT /api/trips/[id] — insert stops error:", insertStopsError);
         return NextResponse.json({ error: insertStopsError.message }, { status: 500 });
       }
     }
@@ -116,6 +120,7 @@ export async function PUT(request: NextRequest, context: RouteParams) {
     .single();
 
   if (fetchError) {
+    console.error("PUT /api/trips/[id] — final fetch error:", fetchError);
     return NextResponse.json({ error: fetchError.message }, { status: 500 });
   }
 

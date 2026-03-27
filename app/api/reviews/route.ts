@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       helpful_count,
       created_at,
       updated_at,
-      user_profiles ( display_name, avatar_url )
+      user_profiles!left ( display_name, avatar_url )
     `)
     .eq('destination_id', destination_id)
     .order('created_at', { ascending: false });

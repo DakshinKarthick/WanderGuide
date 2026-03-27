@@ -70,6 +70,13 @@ export default function LocationsPage() {
     didHydrateRef.current = true
   }, [tripsLoading, isAuthenticated, activeTrip])
 
+  // Keep a ref to activeTrip so the persist effect can read the latest value
+  // without re-triggering every time the server returns an updated trip object.
+  const activeTripRef = useRef(activeTrip)
+  useEffect(() => {
+    activeTripRef.current = activeTrip
+  }, [activeTrip])
+
   useEffect(() => {
     if (!didHydrateRef.current) return
 
@@ -86,27 +93,41 @@ export default function LocationsPage() {
       return
     }
 
-    const persistPayload: CreateTripStopInput[] = tripStops.map((stop, index) => ({
-      destination_id: stop.id,
-      stop_order: index + 1,
-      days_allocated: 1,
-    }))
+    // Only persist stops that come from real destinations in the database.
+    // Pseudo-stops from Trending Locations / Events use synthetic ids
+    // like "trending-*" or "event-*" and would fail foreign key checks.
+    const persistPayload: CreateTripStopInput[] = tripStops
+      .filter((stop) => !stop.id.startsWith("trending-") && !stop.id.startsWith("event-"))
+      .map((stop, index) => ({
+        destination_id: stop.id,
+        stop_order: index + 1,
+        days_allocated: 1,
+      }))
 
     let cancelled = false
 
     const timer = setTimeout(async () => {
-      if (!activeTrip && persistPayload.length === 0) {
+      const currentTrip = activeTripRef.current
+      if (!currentTrip && persistPayload.length === 0) {
         setSyncStatus("idle")
         return
       }
 
       setSyncStatus("syncing")
 
-      const savedTrip = activeTrip
-        ? await updateTrip(activeTrip.id, { stops: persistPayload })
+      // After saving, skip the next persist cycle that would be triggered
+      // by activeTrip updating with the server response.
+      skipNextPersistRef.current = true
+
+      const savedTrip = currentTrip
+        ? await updateTrip(currentTrip.id, { stops: persistPayload })
         : await createTrip({ name: "My India Trip", stops: persistPayload })
 
       if (cancelled) return
+
+      if (!savedTrip) {
+        skipNextPersistRef.current = false
+      }
 
       setSyncStatus(savedTrip ? "saved" : "error")
     }, 450)
@@ -115,7 +136,7 @@ export default function LocationsPage() {
       cancelled = true
       clearTimeout(timer)
     }
-  }, [tripStops, isAuthenticated, activeTrip, createTrip, updateTrip])
+  }, [tripStops, isAuthenticated, createTrip, updateTrip])
 
   const addToTrip = (destination: Destination) => {
     // Check if destination is already in the trip

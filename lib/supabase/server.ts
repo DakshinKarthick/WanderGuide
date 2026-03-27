@@ -38,11 +38,11 @@ export async function createClient() {
 
 export async function createDataClient() {
   const cookieStore = await cookies();
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_DATA_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_DATA_ANON_KEY;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_AUTH_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_AUTH_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('Missing Supabase data environment variables.');
+    throw new Error('Missing Supabase auth environment variables.');
   }
 
   return createServerClient(

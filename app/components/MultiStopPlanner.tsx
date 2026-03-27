@@ -86,27 +86,45 @@ export function MultiStopPlanner({ tripStops, setTripStops }: MultiStopPlannerPr
         let selectedTransport: TransportOption | null = null
 
         try {
-          const response = await fetch("/api/transport", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              origin: { lat: origin.latitude, lon: origin.longitude },
-              destination: { lat: destination.latitude, lon: destination.longitude },
-            }),
-          })
+          const hasValidCoords =
+            Number.isFinite(origin.latitude) &&
+            Number.isFinite(origin.longitude) &&
+            Number.isFinite(destination.latitude) &&
+            Number.isFinite(destination.longitude)
 
-          if (response.ok) {
-            const transportOptions: TransportOption[] = await response.json()
-            selectedTransport = transportOptions.length > 0 ? transportOptions[0] : null
+          const isSameLocation =
+            origin.latitude === destination.latitude &&
+            origin.longitude === destination.longitude
 
-            if (selectedTransport) {
-              cost += selectedTransport.price
-              durationMinutes += selectedTransport.durationMinutes
-            }
+          // Skip transport lookup for synthetic or identical locations (e.g. custom
+          // stops with 0,0 coordinates or duplicate destinations). This avoids
+          // backend 500s like "Could not calculate distance." and simply shows
+          // "Transport not available" for that leg.
+          if (!hasValidCoords || isSameLocation) {
+            selectedTransport = null
           } else {
-            console.error("Failed to fetch transport options", await response.text())
+            const response = await fetch("/api/transport", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                origin: { lat: origin.latitude, lon: origin.longitude },
+                destination: { lat: destination.latitude, lon: destination.longitude },
+              }),
+            })
+
+            if (response.ok) {
+              const transportOptions: TransportOption[] = await response.json()
+              selectedTransport = transportOptions.length > 0 ? transportOptions[0] : null
+
+              if (selectedTransport) {
+                cost += selectedTransport.price
+                durationMinutes += selectedTransport.durationMinutes
+              }
+            } else {
+              console.error("Failed to fetch transport options", await response.text())
+            }
           }
         } catch (e) {
           console.error("Failed to fetch transport options", e)

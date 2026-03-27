@@ -39,7 +39,7 @@ const stats = [
 
 const destinations = [
   { name: "Taj Mahal", location: "Agra, Uttar Pradesh", tag: "Heritage", gradient: "from-slate-700 to-slate-900" },
-  { name: "Kerela Backwaters", location: "Alleppey, Kerala", tag: "Nature", gradient: "from-teal-700 to-emerald-900" },
+  { name: "Kerala Backwaters", location: "Alleppey, Kerala", tag: "Nature", gradient: "from-teal-700 to-emerald-900" },
   { name: "Golden Temple", location: "Amritsar, Punjab", tag: "Spiritual", gradient: "from-amber-700 to-yellow-900" },
   { name: "Goa Beaches", location: "Panaji, Goa", tag: "Beach", gradient: "from-sky-600 to-blue-900" },
 ]

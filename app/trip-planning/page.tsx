@@ -259,7 +259,7 @@ function TripPlanningContent() {
     const payload = {
       start_date: toIsoDate(startDate),
       end_date: toIsoDate(endDate),
-      total_budget: totalBudget || null,
+      total_budget: totalEstimatedCost || null,
       stops: buildStopsPayload(),
     }
 

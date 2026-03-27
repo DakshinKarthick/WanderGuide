@@ -65,10 +65,11 @@ export default function AboutPage() {
       <h2 className="text-2xl font-semibold mb-6 text-center">Our Team</h2>
       <div className="grid md:grid-cols-4 gap-6 mb-12">
         {[
-          { name: "Priya Sharma", role: "Founder & CEO" },
-          { name: "Rahul Patel", role: "Head of Operations" },
-          { name: "Anita Desai", role: "Lead Travel Curator" },
-          { name: "Vikram Singh", role: "Customer Experience Manager" },
+          { name: "Naveen Sundar M", role: "Project Contributor" },
+          { name: "Dakshin Karthick S", role: "Project Contributor" },
+          { name: "Harish Karthic", role: "Project Contributor" },
+          { name: "Dinesh T M", role: "Project Contributor" },
+          { name: "Raja Shylesh S", role: "Project Contributor" },
         ].map((member, index) => (
           <Card key={index} className="border-[#C4D7FF]">
             <CardHeader>

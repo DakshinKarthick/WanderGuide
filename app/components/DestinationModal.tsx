@@ -42,17 +42,36 @@ export function DestinationModal({ destination, onClose, onAddToTrip }: Destinat
       setError(null);
       const fetchModalData = async () => {
         try {
-          const [accommResponse, transportResponse] = await Promise.all([
-            fetch(`/api/accommodation?destination=${destination.name}`),
-            fetch(`/api/transport?origin=current_location&destination=${destination.name}`)
-          ]);
-
-          if (!accommResponse.ok || !transportResponse.ok) {
-            throw new Error('Failed to fetch data');
+          // Fetch accommodation (GET) — works with destination name
+          const accommResponse = await fetch(`/api/accommodation?destination=${encodeURIComponent(destination.name)}`);
+          if (accommResponse.ok) {
+            setAccommodations(await accommResponse.json());
           }
 
-          setAccommodations(await accommResponse.json());
-          setTransportOptions(await transportResponse.json());
+          // Fetch transport (POST) — requires lat/lon coordinates
+          // Use Delhi (28.6139, 77.2090) as a default origin point
+          const transportResponse = await fetch('/api/transport', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              origin: { lat: 28.6139, lon: 77.2090 },
+              destination: { lat: Number(destination.latitude), lon: Number(destination.longitude) },
+            }),
+          });
+          if (transportResponse.ok) {
+            const transportData = await transportResponse.json();
+            // Map the API response to the modal's expected shape
+            const mapped = (Array.isArray(transportData) ? transportData : []).map((opt: any, i: number) => ({
+              id: i + 1,
+              mode: opt.label || opt.mode,
+              price: Math.round(opt.price),
+              duration: opt.durationMinutes
+                ? `${Math.floor(opt.durationMinutes / 60)}h ${Math.round(opt.durationMinutes % 60)}m`
+                : '',
+              badges: opt.tag ? [opt.tag] : [],
+            }));
+            setTransportOptions(mapped);
+          }
         } catch (err) {
           setError(err instanceof Error ? err.message : 'An unknown error occurred');
         } finally {
