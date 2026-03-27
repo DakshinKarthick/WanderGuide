@@ -1,10 +1,13 @@
-version: '3.8'
-
 services:
   wanderguide:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_SUPABASE_AUTH_URL=${NEXT_PUBLIC_SUPABASE_AUTH_URL}
+        - NEXT_PUBLIC_SUPABASE_AUTH_ANON_KEY=${NEXT_PUBLIC_SUPABASE_AUTH_ANON_KEY}
+        - GEOAPIFY_API_KEY=${GEOAPIFY_API_KEY}
+        - OPENROUTESERVICE_API_KEY=${OPENROUTESERVICE_API_KEY}
     container_name: wanderguide-app
     ports:
       - "3000:3000"
