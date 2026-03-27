@@ -108,5 +108,31 @@ erDiagram
 
 ---
 
+## 🐳 Docker Support
+
+WanderGuide can also be run using Docker for a more consistent development and deployment environment.
+
+### Using Docker Compose
+
+1. **Build and start the container**:
+   ```bash
+   docker-compose up --build
+   ```
+2. **Environment Variables**:
+   Ensure you have a `.env` file in the root with the same variables as `.env.local`. Docker Compose will automatically pick these up.
+
+### Using Dockerfile Directly
+
+1. **Build the image**:
+   ```bash
+   docker build -t wanderguide .
+   ```
+2. **Run the container**:
+   ```bash
+   docker run -p 3000:3000 --env-file .env.local wanderguide
+   ```
+
+---
+
 ## 📄 License
 This project is licensed under the MIT License - see the LICENSE file for details.
