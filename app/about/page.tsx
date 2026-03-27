@@ -67,7 +67,7 @@ export default function AboutPage() {
         {[
           { name: "Naveen Sundar M", role: "Project Contributor" },
           { name: "Dakshin Karthick S", role: "Project Contributor" },
-          { name: "Harish Karthic", role: "Project Contributor" },
+          { name: "Harish Karthic R", role: "Project Contributor" },
           { name: "Dinesh T M", role: "Project Contributor" },
           { name: "Raja Shylesh S", role: "Project Contributor" },
         ].map((member, index) => (
