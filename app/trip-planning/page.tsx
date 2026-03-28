@@ -190,6 +190,11 @@ function TripPlanningContent() {
     return Object.values(dayAllocations).reduce((sum, days) => sum + Number(days), 0)
   }
 
+  const getTotalNights = () => {
+    const days = getTotalDays()
+    return days > 0 ? Math.max(0, days - 1) : getAllocatedDays()
+  }
+
   const handleDayChange = (id: string, value: string) => {
     const days = Math.max(1, Number.parseInt(value) || 1)
     setDayAllocations({
@@ -299,7 +304,7 @@ function TripPlanningContent() {
   const calculateEstimatedAccommodationCost = () => {
     const tierRates = { low: 1000, medium: 2500, luxury: 7000 }
     const avgPricePerNight = tierRates[budgetTier]
-    const totalNights = getAllocatedDays()
+    const totalNights = getTotalNights()
     return totalNights * avgPricePerNight
   }
 
@@ -649,7 +654,7 @@ function TripPlanningContent() {
                       </div>
                       <div>
                         <p className="font-bold">Accommodation</p>
-                        <p className="text-xs text-slate-500">{getAllocatedDays()} nights</p>
+                        <p className="text-xs text-slate-500">{getTotalNights()} nights</p>
                       </div>
                     </div>
                     <p className="font-bold">₹{accommodationCost.toLocaleString()}</p>
@@ -691,7 +696,7 @@ function TripPlanningContent() {
                   <div className="space-y-4">
                     <div className="p-3 bg-[#0F172A] rounded-xl border border-slate-700">
                       <p className="text-slate-400 text-xs mb-1">Duration</p>
-                      <p className="font-bold">{getTotalDays()} Days, {getAllocatedDays()} Nights</p>
+                      <p className="font-bold">{getTotalDays()} Days, {getTotalNights()} Nights</p>
                     </div>
                     <div className="space-y-3">
                       <p className="font-bold text-slate-400 text-xs uppercase tracking-wider">Itinerary</p>
