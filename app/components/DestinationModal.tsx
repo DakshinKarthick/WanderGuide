@@ -191,7 +191,7 @@ export function DestinationModal({ destination, onClose, onAddToTrip }: Destinat
           <div className="border border-border rounded-xl p-4">
             <h3 className="text-sm font-semibold flex items-center gap-2 mb-3">
               <Train className="w-4 h-4 text-primary" />
-              Transport Options
+              Transport Options (from delhi)
             </h3>
             {loading && (
               <div className="space-y-2">
